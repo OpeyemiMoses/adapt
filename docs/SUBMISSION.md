@@ -15,7 +15,7 @@
 - **Total Prize Pool:** $20,000 across top 5 + 5 runners-up
 
 ## 3. Submission Steps & Links
-1. **GitHub Repository:** Push this repository to GitHub (e.g. `https://github.com/<your-username>/adapt`).
+1. **GitHub Repository:** Push this repository to GitHub: `https://github.com/OpeyemiMoses/adapt`.
 2. **Open Pull Request on NousResearch/hermes-agent:**
    - Add [`integrations/hermes/catalog_entry.yaml`](file:///Users/user/.gemini/antigravity/scratch/adapt/integrations/hermes/catalog_entry.yaml) into `plugin-catalog/adapt.yaml` in the `NousResearch/hermes-agent` repository.
    - Reference: [Catalog Submission Guide](http://hermes-agent.nousresearch.com/docs/developer-guide/plugins/catalog-submission)
