@@ -9,3 +9,10 @@ provides_memory_providers:
   - adapt
 config_keys:
   - memory.adapt
+config_schema:
+  storage_dir:
+    type: str
+    required: false
+  top_k:
+    type: int
+    required: false

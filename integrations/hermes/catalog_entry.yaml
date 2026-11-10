@@ -1,0 +1,11 @@
+name: adapt
+repo: https://github.com/adapt-memory/adapt
+sha: 3d8dabd46a644cf4dcd866435218a69578975fb1
+subdir: integrations/hermes
+description: "Persistent memory infrastructure layer for AI agents with episodic, semantic, procedural, and working memory, hybrid retrieval, and knowledge graph evolution."
+maintainer: ADAPT Team
+category: memory
+tier: community
+version: "0.1.0"
+requires_hermes: ">=0.20.0"
+readme: true
