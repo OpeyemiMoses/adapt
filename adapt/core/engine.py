@@ -8,7 +8,10 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
 
 from adapt.core.errors import MemoryNotFoundError, UnauthorizedAccessError, ValidationError
+from adapt.embeddings.base import EmbeddingProvider
+from adapt.embeddings.providers import NoOpEmbeddingProvider
 from adapt.memory.ingestion.pipeline import IngestionPipeline, IngestionResult
+from adapt.memory.retrieval.engine import RetrievalEngine
 from adapt.models.schema import (
     Memory,
     MemoryRelationship,
@@ -37,9 +40,12 @@ class AdaptEngine:
     def __init__(
         self,
         storage: Optional[StorageBackend] = None,
+        embedding_provider: Optional[EmbeddingProvider] = None,
         storage_dir: Optional[str] = None,
         db_name: str = "adapt_memory.db",
         working_ttl_hours: int = 24,
+        hybrid_alpha: float = 0.5,
+        min_score: float = 0.20,
     ) -> None:
         if storage is not None:
             self.storage = storage
@@ -49,7 +55,14 @@ class AdaptEngine:
             self.storage = SQLiteStorage(db_path=str(full_path))
 
         self.storage.initialize()
+        self.embedding_provider = embedding_provider or NoOpEmbeddingProvider()
         self.ingestion = IngestionPipeline(storage=self.storage, working_ttl_hours=working_ttl_hours)
+        self.retrieval = RetrievalEngine(
+            storage=self.storage,
+            embedding_provider=self.embedding_provider,
+            hybrid_alpha=hybrid_alpha,
+            min_score=min_score,
+        )
 
     def close(self) -> None:
         """Close storage connections and clean up resources."""
@@ -112,7 +125,7 @@ class AdaptEngine:
         project_id: Optional[str] = None,
         limit: int = 5,
         memory_types: Optional[List[Union[MemoryType, str]]] = None,
-        include_related: bool = False,
+        include_related: bool = True,
     ) -> List[ScoredMemory]:
         """Perform context-aware recall matching the agent's current task or query."""
         validate_identifier("owner_id", owner_id)
@@ -126,52 +139,15 @@ class AdaptEngine:
                 for t in memory_types
             ]
 
-        # Lexical FTS5 retrieval (M1 base; expanded to hybrid in M3)
-        lexical_results = self.storage.search_lexical(
+        return self.retrieval.retrieve(
             query=query,
             owner_id=owner_id,
             agent_id=agent_id,
-            memory_types=parsed_types,
             project_id=project_id,
             limit=limit,
+            memory_types=parsed_types,
+            include_related=include_related,
         )
-
-        scored_results: List[ScoredMemory] = []
-        for mem, score in lexical_results:
-            # Factor in importance
-            final_score = score * (0.5 + 0.5 * mem.importance)
-            scored_results.append(
-                ScoredMemory(
-                    memory=mem,
-                    score=final_score,
-                    lexical_score=score,
-                    importance_factor=mem.importance,
-                    explanation=f"Lexical BM25 match ({score:.2f}) weighted by importance ({mem.importance:.2f})",
-                )
-            )
-
-        if include_related and scored_results:
-            # Associative traversal for top result
-            top_mem = scored_results[0].memory
-            related = self.storage.get_related_memories(
-                memory_id=top_mem.id,
-                owner_id=owner_id,
-                max_depth=1,
-            )
-            existing_ids = {sm.memory.id for sm in scored_results}
-            for rel_mem in related:
-                if rel_mem.id not in existing_ids:
-                    scored_results.append(
-                        ScoredMemory(
-                            memory=rel_mem,
-                            score=scored_results[0].score * 0.75,
-                            explanation=f"Associatively related to '{top_mem.id}'",
-                        )
-                    )
-
-        # Sort descending by final score
-        scored_results.sort(key=lambda sm: sm.score, reverse=True)
-        return scored_results[:limit]
 
     def search(
         self,
