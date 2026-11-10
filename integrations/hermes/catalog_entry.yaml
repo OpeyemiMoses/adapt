@@ -1,6 +1,6 @@
 name: adapt
 repo: https://github.com/OpeyemiMoses/adapt
-sha: 0917b64dc06bdd6198c89a5989c38dc77af59bc9
+sha: af8af3a5d3cefef58cbb0e7b70116e996a607c10
 subdir: integrations/hermes
 description: "Persistent memory infrastructure layer for AI agents with episodic, semantic, procedural, and working memory, hybrid retrieval, and knowledge graph evolution."
 maintainer: Opeyemi Moses
