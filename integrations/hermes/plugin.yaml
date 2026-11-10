@@ -1,0 +1,11 @@
+name: adapt
+version: "0.1.0"
+description: "ADAPT — Persistent memory infrastructure for AI agents with episodic, semantic, procedural, and working memory."
+author: "ADAPT Team"
+category: memory
+tier: community
+requires_hermes: ">=0.20.0"
+provides_memory_providers:
+  - adapt
+config_keys:
+  - memory.adapt
