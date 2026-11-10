@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
 
 from adapt.core.errors import MemoryNotFoundError, UnauthorizedAccessError, ValidationError
+from adapt.memory.ingestion.pipeline import IngestionPipeline, IngestionResult
 from adapt.models.schema import (
     Memory,
     MemoryRelationship,
@@ -38,6 +39,7 @@ class AdaptEngine:
         storage: Optional[StorageBackend] = None,
         storage_dir: Optional[str] = None,
         db_name: str = "adapt_memory.db",
+        working_ttl_hours: int = 24,
     ) -> None:
         if storage is not None:
             self.storage = storage
@@ -47,6 +49,7 @@ class AdaptEngine:
             self.storage = SQLiteStorage(db_path=str(full_path))
 
         self.storage.initialize()
+        self.ingestion = IngestionPipeline(storage=self.storage, working_ttl_hours=working_ttl_hours)
 
     def close(self) -> None:
         """Close storage connections and clean up resources."""
@@ -57,7 +60,7 @@ class AdaptEngine:
     def remember(
         self,
         content: str,
-        memory_type: Union[MemoryType, str] = MemoryType.SEMANTIC,
+        memory_type: Optional[Union[MemoryType, str]] = None,
         owner_id: str = "default_user",
         agent_id: str = "hermes",
         project_id: Optional[str] = None,
@@ -67,47 +70,39 @@ class AdaptEngine:
         source_identifier: Optional[str] = None,
         expires_at: Optional[str] = None,
         metadata: Optional[Dict[str, Any]] = None,
+        link_conflicts: bool = True,
     ) -> Memory:
         """Persist a new memory with source provenance and tenant isolation."""
-        content = content.strip()
-        if not content:
+        if not content or not content.strip():
             raise ValidationError("Memory content cannot be empty.")
 
         validate_identifier("owner_id", owner_id)
         validate_identifier("agent_id", agent_id)
 
-        if isinstance(memory_type, str):
-            try:
-                memory_type = MemoryType(memory_type.lower())
-            except ValueError:
-                raise ValidationError(f"Invalid memory_type '{memory_type}'. Must be one of {[t.value for t in MemoryType]}")
+        parsed_type: Optional[MemoryType] = None
+        if memory_type is not None:
+            if isinstance(memory_type, str):
+                try:
+                    parsed_type = MemoryType(memory_type.lower())
+                except ValueError:
+                    raise ValidationError(f"Invalid memory_type '{memory_type}'. Must be one of {[t.value for t in MemoryType]}")
+            else:
+                parsed_type = memory_type
 
-        source_id = None
-        if source_type and source_identifier:
-            source = MemorySource(
-                source_type=source_type,
-                source_identifier=source_identifier,
-                owner_id=owner_id,
-                agent_id=agent_id,
-            )
-            saved_source = self.storage.record_source(source)
-            source_id = saved_source.id
-
-        mem = Memory(
+        ingest_result = self.ingestion.ingest(
+            raw_content=content,
             owner_id=owner_id,
             agent_id=agent_id,
             project_id=project_id,
-            memory_type=memory_type,
-            content=content,
-            importance=max(0.0, min(1.0, float(importance))),
-            confidence=max(0.0, min(1.0, float(confidence))),
+            explicit_type=parsed_type,
+            importance=importance,
+            confidence=confidence,
             source_type=source_type,
-            source_id=source_id,
-            expires_at=expires_at,
-            metadata=metadata or {},
+            source_identifier=source_identifier,
+            metadata=metadata,
+            link_conflicts=link_conflicts,
         )
-
-        return self.storage.create_memory(mem)
+        return ingest_result.memory
 
     def recall(
         self,
