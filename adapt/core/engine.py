@@ -10,9 +10,12 @@ from typing import Any, Dict, List, Optional, Union
 from adapt.core.errors import MemoryNotFoundError, UnauthorizedAccessError, ValidationError
 from adapt.embeddings.base import EmbeddingProvider
 from adapt.embeddings.providers import NoOpEmbeddingProvider
+from adapt.memory.consolidation.engine import ConsolidationEngine
 from adapt.memory.ingestion.pipeline import IngestionPipeline, IngestionResult
+from adapt.memory.relationships.graph import KnowledgeGraph
 from adapt.memory.retrieval.engine import RetrievalEngine
 from adapt.models.schema import (
+    ConsolidationReport,
     Memory,
     MemoryRelationship,
     MemorySource,
@@ -63,6 +66,8 @@ class AdaptEngine:
             hybrid_alpha=hybrid_alpha,
             min_score=min_score,
         )
+        self.graph = KnowledgeGraph(storage=self.storage)
+        self.consolidation = ConsolidationEngine(storage=self.storage)
 
     def close(self) -> None:
         """Close storage connections and clean up resources."""
@@ -246,12 +251,35 @@ class AdaptEngine:
             if isinstance(relationship_type, str)
             else relationship_type
         )
-        return self.storage.get_related_memories(
+        return self.graph.traverse(
             memory_id=memory_id,
             owner_id=owner_id,
             relationship_type=rel_type,
             max_depth=max_depth,
         )
+
+    def get_subgraph(
+        self,
+        memory_id: str,
+        max_depth: int = 2,
+        owner_id: str = "default_user",
+    ) -> Dict[str, Any]:
+        """Retrieve node and edge graph representation centered on a memory."""
+        validate_identifier("owner_id", owner_id)
+        return self.graph.get_subgraph(
+            memory_id=memory_id,
+            owner_id=owner_id,
+            max_depth=max_depth,
+        )
+
+    def consolidate(
+        self,
+        owner_id: str = "default_user",
+        agent_id: Optional[str] = None,
+    ) -> ConsolidationReport:
+        """Run memory evolution, deduplication, conflict linking, and archival."""
+        validate_identifier("owner_id", owner_id)
+        return self.consolidation.consolidate(owner_id=owner_id, agent_id=agent_id)
 
     def get_stats(self, owner_id: str = "default_user", agent_id: Optional[str] = None) -> Dict[str, Any]:
         """Retrieve aggregated telemetry on memory usage."""
