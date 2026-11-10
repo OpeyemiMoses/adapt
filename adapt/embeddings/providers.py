@@ -155,3 +155,4 @@ class RemoteEmbeddingProvider(EmbeddingProvider):
         except Exception:
             # Fall back gracefully on network or auth errors
             return [[] for _ in texts]
+

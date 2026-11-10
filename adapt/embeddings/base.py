@@ -35,3 +35,4 @@ class EmbeddingProvider(ABC):
     def embed_documents(self, texts: List[str]) -> List[List[float]]:
         """Generate embedding vectors for a list of document strings."""
         pass
+

@@ -35,3 +35,4 @@ def test_cross_session_continuity_after_restart(tmp_path):
     assert provider_2.recall_status().count >= 1
 
     provider_2.shutdown()
+

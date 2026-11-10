@@ -144,3 +144,4 @@ def test_engine_stats(engine):
     assert stats["active_memories"] == 2
     assert stats["by_type"]["semantic"] == 1
     assert stats["by_type"]["episodic"] == 1
+

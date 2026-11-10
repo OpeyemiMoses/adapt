@@ -48,3 +48,4 @@
 - **Visual:** GitHub repo and Hermes catalog entry: `hermes plugins install adapt`.
 - **Voiceover:**
   > "ADAPT is local-first, zero-dependency, and ready for Hermes Agent. Check out the repository on GitHub!"
+

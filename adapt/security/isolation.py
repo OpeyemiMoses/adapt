@@ -36,3 +36,4 @@ def assert_can_access(memory: Memory, owner_id: str, agent_id: Optional[str] = N
         raise PermissionError(
             f"Unauthorized access: memory {memory.id} does not belong to owner {owner_id}"
         )
+

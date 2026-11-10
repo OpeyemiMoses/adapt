@@ -134,3 +134,4 @@ def test_handle_tool_calls_return_json(provider):
     res_forget = json.loads(forget_raw)
     assert res_forget["status"] == "success"
     assert res_forget["deleted"] is True
+

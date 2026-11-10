@@ -44,3 +44,4 @@ Alternatively, use the interactive wizard:
 hermes memory setup
 # Select 'adapt'
 ```
+

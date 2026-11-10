@@ -81,3 +81,4 @@ class KnowledgeGraph:
             "nodes": [m.to_dict() for m in nodes.values()],
             "edges": [e.to_dict() for e in edges],
         }
+

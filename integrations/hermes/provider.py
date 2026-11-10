@@ -500,3 +500,4 @@ class AdaptMemoryProvider(MemoryProvider):
                 "description": "Weight between semantic (1.0) and lexical (0.0) retrieval.",
             },
         ]
+

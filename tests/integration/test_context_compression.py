@@ -31,3 +31,4 @@ def test_context_compression_preservation(tmp_path):
     assert "Protobuf 3" in recalled
 
     provider.shutdown()
+

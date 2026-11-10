@@ -146,3 +146,4 @@ class ConsolidationEngine:
                 error=str(exc),
             )
             raise
+

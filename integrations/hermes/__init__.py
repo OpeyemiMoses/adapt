@@ -16,3 +16,4 @@ def register(ctx) -> None:
     elif hasattr(ctx, "register_provider"):
         ctx.register_provider(provider)
     logger.debug("Registered ADAPT memory provider plugin")
+

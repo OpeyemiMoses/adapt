@@ -25,3 +25,4 @@
 - **Catalog Pull Request:** Proposed entry in `NousResearch/hermes-agent` at `plugin-catalog/adapt.yaml`
 - **Hackathon Form:** [Typeform Submission](https://form.typeform.com/to/FwJLvOln)
 - **X (Twitter) Tag:** [@NousResearch](https://x.com/NousResearch)
+

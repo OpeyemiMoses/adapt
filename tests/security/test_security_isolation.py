@@ -55,3 +55,4 @@ def test_cross_tenant_isolation_enforcement(tmp_path):
         )
 
     engine.close()
+

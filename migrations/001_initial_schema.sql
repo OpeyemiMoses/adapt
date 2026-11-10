@@ -131,3 +131,4 @@ CREATE TABLE IF NOT EXISTS memory_jobs (
 );
 
 CREATE INDEX IF NOT EXISTS idx_jobs_status ON memory_jobs(status);
+

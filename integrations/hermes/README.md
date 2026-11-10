@@ -33,3 +33,4 @@ Or via interactive wizard:
 hermes memory setup
 # Select 'adapt'
 ```
+

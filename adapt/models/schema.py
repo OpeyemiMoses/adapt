@@ -261,3 +261,4 @@ class ConsolidationReport:
     recency_scores_updated: int = 0
     details: List[str] = field(default_factory=list)
     created_at: str = field(default_factory=utc_now_iso)
+

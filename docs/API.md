@@ -107,3 +107,4 @@ Provides aggregated telemetry on memory counts, types, storage usage, and active
 ```python
 stats = adapt.get_stats(owner_id="user_123")
 ```
+

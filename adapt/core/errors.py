@@ -21,3 +21,4 @@ class UnauthorizedAccessError(AdaptError):
 class ValidationError(AdaptError):
     """Raised when incoming parameters or schema validation fails."""
     pass
+

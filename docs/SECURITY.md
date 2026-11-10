@@ -7,3 +7,4 @@
 - **Immutable Provenance & Versioning**: Critical updates do not overwrite historical records. All updates generate an audit record in `memory_versions`.
 - **Soft and Hard Deletion**: Memories marked for deletion are immediately excluded from recall and search queries, with permanent purging available on request.
 - **No Hardcoded Credentials**: API tokens and keys are read exclusively from environment variables or secure profile stores.
+
