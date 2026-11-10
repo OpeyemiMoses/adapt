@@ -76,27 +76,38 @@ class RetrievalEngine:
         # 2. Semantic retrieval if embedding provider is available
         has_semantic = self.embedding_provider.is_available()
         query_vec: List[float] = []
-        if has_semantic:
-            query_vec = self.embedding_provider.embed_query(query)
-            # Also fetch recent memories to give non-keyword semantic matches a chance
-            additional_active = self.storage.list_memories(
-                owner_id=owner_id,
-                agent_id=agent_id,
-                project_id=project_id,
-                memory_types=memory_types,
-                status=MemoryStatus.ACTIVE,
-                limit=limit * 3,
-            )
-            for m in additional_active:
-                if m.id not in candidate_map:
-                    candidate_map[m.id] = (m, 0.0)
-
-        scored_list: List[ScoredMemory] = []
-        doc_texts = [m.content for m, _ in candidate_map.values()]
         doc_vectors: List[List[float]] = []
 
-        if has_semantic and query_vec:
-            doc_vectors = self.embedding_provider.embed_documents(doc_texts)
+        if has_semantic:
+            try:
+                query_vec = self.embedding_provider.embed_query(query)
+                # Also fetch recent memories to give non-keyword semantic matches a chance
+                additional_active = self.storage.list_memories(
+                    owner_id=owner_id,
+                    agent_id=agent_id,
+                    project_id=project_id,
+                    memory_types=memory_types,
+                    status=MemoryStatus.ACTIVE,
+                    limit=limit * 3,
+                )
+                for m in additional_active:
+                    if m.id not in candidate_map:
+                        candidate_map[m.id] = (m, 0.0)
+
+                doc_texts = [m.content for m, _ in candidate_map.values()]
+                if query_vec and doc_texts:
+                    doc_vectors = self.embedding_provider.embed_documents(doc_texts)
+            except Exception as exc:
+                logger.warning(
+                    "Embedding provider %s failed (%s); falling back to lexical FTS5 BM25.",
+                    self.embedding_provider.name,
+                    exc,
+                )
+                has_semantic = False
+                query_vec = []
+                doc_vectors = []
+
+        scored_list: List[ScoredMemory] = []
 
         for i, (m_id, (mem, lex_score)) in enumerate(candidate_map.items()):
             sem_score = 0.0
