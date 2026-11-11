@@ -17,7 +17,7 @@
 ## 3. Submission Steps & Links
 1. **GitHub Repository:** Push this repository to GitHub: `https://github.com/OpeyemiMoses/adapt`.
 2. **Open Pull Request on NousResearch/hermes-agent:**
-   - Add [`integrations/hermes/catalog_entry.yaml`](file:///Users/user/.gemini/antigravity/scratch/adapt/integrations/hermes/catalog_entry.yaml) into `plugin-catalog/adapt.yaml` in the `NousResearch/hermes-agent` repository.
+   - Add `plugin-catalog/adapt.yaml` in the `NousResearch/hermes-agent` repository.
    - Reference: [Catalog Submission Guide](http://hermes-agent.nousresearch.com/docs/developer-guide/plugins/catalog-submission)
 3. **Record & Post Demo Video on X:**
    - Under 90 seconds (Script ready in [`docs/DEMO_SCRIPT.md`](file:///Users/user/.gemini/antigravity/scratch/adapt/docs/DEMO_SCRIPT.md) ~75s).
@@ -29,12 +29,12 @@
 - **Automated Tests:** 40 passing tests across unit, integration, security, and e2e (`pytest tests/`).
 - **Official Plugin Validation:**
   ```bash
-  hermes plugins validate ./integrations/hermes --install-deps
+  hermes plugins validate . --install-deps
   # Result: OK: True (0 warnings, 0 failures)
   ```
 - **Official Catalog Schema Validation:**
   ```bash
-  python3 scripts/validate_plugin_catalog.py integrations/hermes/catalog_entry.yaml
+  python3 scripts/validate_plugin_catalog.py plugin-catalog/adapt.yaml
   # Result: OK: 1 file(s) valid
   ```
 

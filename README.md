@@ -7,7 +7,7 @@
 
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 [![Python Version](https://img.shields.io/badge/Python-3.10%20%7C%203.11%20%7C%203.12-blue)](pyproject.toml)
-[![Hermes Conformance](https://img.shields.io/badge/Hermes_Agent-Validated_(0_warnings)-success)](integrations/hermes/plugin.yaml)
+[![Hermes Conformance](https://img.shields.io/badge/Hermes_Agent-Validated_(0_warnings)-success)](plugin.yaml)
 [![Tests Passing](https://img.shields.io/badge/Tests-40%2F40_Passing-brightgreen)](tests/)
 [![Status](https://img.shields.io/badge/Status-Beta_%7C_Hackathon_Ready-orange)](https://github.com/OpeyemiMoses/adapt)
 
@@ -272,7 +272,7 @@ graph TD
 ADAPT is engineered as a first-class memory provider for [Hermes Agent](https://github.com/NousResearch/hermes-agent):
 * Implements `agent.memory_provider.MemoryProvider`.
 * Registered in `plugin.yaml` conforming to the Hermes Plugin Specification.
-* Catalog entry in `integrations/hermes/catalog_entry.yaml` ready for inclusion in `plugin-catalog/adapt.yaml`.
+* Catalog entry in `plugin-catalog/adapt.yaml` for official marketplace inclusion.
 * Configurable directly in `~/.hermes/config.yaml`:
   ```yaml
   memory:
@@ -295,10 +295,10 @@ While ADAPT defaults to local SQLite for zero-friction evaluation, its architect
 ADAPT passes the official Hermes plugin validation probe with zero warnings:
 
 ```
-$ python -m hermes_cli.plugin_validate ./integrations/hermes --install-deps
+$ python -m hermes_cli.plugin_validate . --install-deps
 
 === Validating Plugin: adapt ===
-Path: /Users/user/.gemini/antigravity/scratch/adapt/integrations/hermes
+Path: /Users/user/.gemini/antigravity/scratch/adapt
 Manifest: Valid (name: adapt, version: 0.1.0)
 Capabilities:
   - MemoryProvider: AdaptMemoryProvider (name: adapt)
@@ -375,7 +375,7 @@ python examples/basic_memory.py
 
 1. Copy or link ADAPT to your local Hermes plugins directory:
    ```bash
-   hermes plugins install ./integrations/hermes
+   hermes plugins install .
    ```
 2. Enable ADAPT as your memory provider in `~/.hermes/config.yaml`:
    ```yaml

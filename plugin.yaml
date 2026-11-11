@@ -1,0 +1,18 @@
+name: adapt
+version: "0.1.0"
+description: "ADAPT — Persistent memory infrastructure for AI agents with episodic, semantic, procedural, and working memory."
+author: "Opeyemi Moses"
+category: memory
+tier: community
+requires_hermes: ">=0.20.0"
+provides_memory_providers:
+  - adapt
+config_keys:
+  - memory.adapt
+config_schema:
+  storage_dir:
+    type: str
+    required: false
+  top_k:
+    type: int
+    required: false
