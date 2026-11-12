@@ -14,7 +14,7 @@ ADAPT is a persistent, framework-independent memory infrastructure layer for aut
                                           | Lifecycle Hooks / Tool Calls / Prefetch
                                           v
 +-----------------------------------------------------------------------------------+
-|                   Integration Layer (integrations/hermes/provider.py)             |
+|                   Integration Layer (provider.py)                                 |
 +-----------------------------------------+-----------------------------------------+
                                           |
                                           v

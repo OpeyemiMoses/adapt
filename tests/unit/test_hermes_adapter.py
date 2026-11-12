@@ -3,7 +3,7 @@
 import json
 import pytest
 
-from integrations.hermes.provider import AdaptMemoryProvider
+from provider import AdaptMemoryProvider
 
 
 @pytest.fixture

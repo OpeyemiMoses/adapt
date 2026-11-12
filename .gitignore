@@ -35,8 +35,10 @@ htmlcov/
 *.db
 *.sqlite
 *.sqlite3
-data/
-storage/
+/data/
+/storage/
+*.mp4
+uv.lock
 
 # Environment & Secrets
 .env

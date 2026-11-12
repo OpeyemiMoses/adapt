@@ -1,6 +1,6 @@
 """Integration tests for Cross-Session Memory Continuity."""
 
-from integrations.hermes.provider import AdaptMemoryProvider
+from provider import AdaptMemoryProvider
 
 
 def test_cross_session_continuity_after_restart(tmp_path):

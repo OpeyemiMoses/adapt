@@ -34,10 +34,11 @@ dev = [
 ]
 
 [tool.setuptools.packages.find]
-include = ["adapt*", "integrations*"]
+include = ["adapt*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 python_files = ["test_*.py"]
 python_functions = ["test_*"]
+pythonpath = ["."]
 addopts = "-v --strict-markers"

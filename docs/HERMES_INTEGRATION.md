@@ -79,7 +79,7 @@ class AdaptMemoryProvider(MemoryProvider):
 ## 4. Official Validation & Catalog Submission
 1. Local Validation:
    ```bash
-   hermes plugins validate ./integrations/hermes --install-deps
+   hermes plugins validate . --install-deps
    ```
 2. Activation in `~/.hermes/config.yaml`:
    ```yaml

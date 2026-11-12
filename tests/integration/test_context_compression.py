@@ -1,6 +1,6 @@
 """Integration tests for Context Window Compression Preservation."""
 
-from integrations.hermes.provider import AdaptMemoryProvider
+from provider import AdaptMemoryProvider
 
 
 def test_context_compression_preservation(tmp_path):

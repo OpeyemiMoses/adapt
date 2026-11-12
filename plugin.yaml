@@ -16,3 +16,4 @@ config_schema:
   top_k:
     type: int
     required: false
+

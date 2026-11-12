@@ -5,7 +5,7 @@ import sqlite3
 import tempfile
 from pathlib import Path
 
-from integrations.hermes.provider import AdaptMemoryProvider
+from provider import AdaptMemoryProvider
 
 
 def run_audit() -> None:

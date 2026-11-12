@@ -22,10 +22,10 @@ ADAPT is delivered as an official Hermes Memory Provider Plugin:
 
 ```bash
 # 1. Validate plugin compliance using Hermes official validator
-hermes plugins validate ./integrations/hermes --install-deps
+hermes plugins validate . --install-deps
 
 # 2. Install the plugin into Hermes profile
-hermes plugins install /path/to/adapt/integrations/hermes
+hermes plugins install /path/to/adapt
 ```
 
 ## 4. Activation in Hermes Agent
